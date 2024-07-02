@@ -1,14 +1,63 @@
-# Lockboxes
+# :book: 0x01. Lockboxes
+## Topics Covered
+1. Python.
+2. Lockboxes.
 
-You have n number of locked boxes in front of you.
-Each box is numbered sequentially from 0 to n-1 and each box contains keys to the other boxes.
-1. A key with the same number as the box opens that box.
-2. There can be keys that do not have boxes.
-3. A box may be empty i.e., not have any keys at all.
+# :computer: Tasks.
+## [0. Lockboxes](0-lockboxes.py)
+### Task requirements.
+You have n number of locked boxes in front of you. Each box is numbered sequentially from 0 to n - 1 and each box may contain keys to the other boxes.
 
-The first box is already unlocked.
-Given a certain set of boxes, write a function that determines if all the boxes can be opened.
-Function Prototype:
-` def canUnlockAll(boxes)`
+Write a method that determines if all the boxes can be opened.
 
-where boxes is a list of lists
+  *  Prototype: def canUnlockAll(boxes)
+  *  boxes is a list of lists
+  *  You can assume all keys will be positive integers
+      *  There can be keys that do not have boxes
+  *  The first box boxes[0] is unlocked
+  *  Return True if all boxes can be opened, else return False
+```
+carrie@ubuntu:~/0x01-lockboxes$ cat main_0.py
+#!/usr/bin/python3
+
+canUnlockAll = __import__('0-lockboxes').canUnlockAll
+
+boxes = [[1], [2], [3], [4], []]
+print(canUnlockAll(boxes))
+
+boxes = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
+print(canUnlockAll(boxes))
+
+boxes = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
+print(canUnlockAll(boxes))
+
+carrie@ubuntu:~/0x01-lockboxes$
+```
+
+```
+carrie@ubuntu:~/0x01-lockboxes$ ./main_0.py
+True
+True
+False
+carrie@ubuntu:~/0x01-lockboxes$
+```
+
+### :wrench: Task setup.
+```bash
+# Create task file and set write permission.
+touch ./0-lockboxes.py
+chmod +x ./0-lockboxes.py
+./0-lockboxes.py
+
+# Lint the code.
+pycodestyle ./0-lockboxes.py
+pep8 ./0-lockboxes.py
+
+# Create test file
+touch ./0-main.py
+chmod +x ./0-main.py
+./0-main.py
+```
+
+### :heavy_check_mark: Solution.
+> [:point_right:  Open 0-lockboxes.py](0-lockboxes.py)
