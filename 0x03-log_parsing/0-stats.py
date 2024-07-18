@@ -1,58 +1,55 @@
 #!/usr/bin/python3
-
-
-"""
-This module holds a simple module to do log
-parsing. Given a input of log files, extract some
-usefull information and print it to standard output
-"""
-
 import sys
-import re
-def check_log_format(log_string):
-    regex_pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[.*\] "GET \/projects\/260 HTTP\/1\.1" \d{3} \d+'
-    return re.match(regex_pattern, log_string)
+import signal
 
+total_size = 0
+status_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+line_count = 0
 
-def print_to_stdout(**kwargs):
-    """
-    A simple helper function to print
-    the values to standard output
-    """
-    for key in kwargs.keys():
-        if not isinstance(kwargs.get(key), dict):
-            # Means this is not a dictionary of dictionaries
-            # So Its the file size
-            print("File Size {}".format(kwargs.get(key)))
-        else:
-            for nested_k, nested_v in key.items():
-                print(f"{nested_k}: {nested_v}")
+def print_statistics(total_size, status_counts):
+    print(f"File size: {total_size}")
+    for status in sorted(status_counts.keys()):
+        if status_counts[status] > 0:
+            print(f"{status}: {status_counts[status]}")
 
+def parse_line(line):
+    parts = line.split()
+    if len(parts) < 9:
+        return None
+    ip_address = parts[0]
+    date = parts[3][1:]
+    method = parts[5][1:]
+    resource = parts[6]
+    protocol = parts[7][:-1]
+    try:
+        status_code = int(parts[8])
+        file_size = int(parts[9])
+    except ValueError:
+        return None
 
-def read_and_analyze_log_files():
-    while True:
-        try:
-            status_codes = {
-                "200": 0,
-                "301": 0,
-                "400": 0,
-                "401": 0,
-                "403": 0,
-                "404": 0,
-                "405": 0,
-                "500": 0
+    if method == "GET" and resource == "/projects/260" and protocol == "HTTP/1.1":
+        return status_code, file_size
+    return None
 
-            }
-            total_size = 0
-            for time in range(11):
-                log_info = input("").strip()
-                if check_log_format(log_info):
-                    log_info_list = log_info.split(" ")
-                    f_size = log_info_list[-1]
-                    s_code = log_info_list[-2]
-                    status_codes[s_code] = status_codes.get(s_code) + 1
-                    total_size += int(f_size)
-                    sorted_keys_dict = {code: status_codes[code] for code in sorted(status_codes)}
-            print_to_stdout(codes=sorted_keys_dict, size = total_size)
-        except KeyboardInterrupt:
-            print_to_stdout(codes=sorted_keys_dict, size = total_size)
+def signal_handler(sig, frame):
+    print_statistics(total_size, status_counts)
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+try:
+    for line in sys.stdin:
+        line_count += 1
+        result = parse_line(line.strip())
+        if result:
+            status_code, file_size = result
+            total_size += file_size
+            if status_code in status_counts:
+                status_counts[status_code] += 1
+
+        if line_count % 10 == 0:
+            print_statistics(total_size, status_counts)
+
+except KeyboardInterrupt:
+    print_statistics(total_size, status_counts)
+    sys.exit(0)
