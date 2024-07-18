@@ -1,47 +1,58 @@
 #!/usr/bin/python3
-""" script that reads stdin line by line and computes metrics """
 
-if __name__ == '__main__':
 
-    import sys
+"""
+This module holds a simple module to do log
+parsing. Given a input of log files, extract some
+usefull information and print it to standard output
+"""
 
-    def print_results(statusCodes, fileSize):
-        """ Print statistics """
-        print("File size: {:d}".format(fileSize))
-        for statusCode, times in sorted(statusCodes.items()):
-            if times:
-                print("{:s}: {:d}".format(statusCode, times))
+import sys
+import re
+def check_log_format(log_string):
+    regex_pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[.*\] "GET \/projects\/260 HTTP\/1\.1" \d{3} \d+'
+    return re.match(regex_pattern, log_string)
 
-    statusCodes = {"200": 0,
-                   "301": 0,
-                   "400": 0,
-                   "401": 0,
-                   "403": 0,
-                   "404": 0,
-                   "405": 0,
-                   "500": 0
-                   }
-    fileSize = 0
-    n_lines = 0
 
-    try:
-        """ Read stdin line by line """
-        for line in sys.stdin:
-            if n_lines != 0 and n_lines % 10 == 0:
-                """ After every 10 lines, print from the beginning """
-                print_results(statusCodes, fileSize)
-            n_lines += 1
-            data = line.split()
-            try:
-                """ Compute metrics """
-                statusCode = data[-2]
-                if statusCode in statusCodes:
-                    statusCodes[statusCode] += 1
-                fileSize += int(data[-1])
-            except:
-                pass
-        print_results(statusCodes, fileSize)
-    except KeyboardInterrupt:
-        """ Keyboard interruption, print from the beginning """
-        print_results(statusCodes, fileSize)
-        raise
+def print_to_stdout(**kwargs):
+    """
+    A simple helper function to print
+    the values to standard output
+    """
+    for key in kwargs.keys():
+        if not isinstance(kwargs.get(key), dict):
+            # Means this is not a dictionary of dictionaries
+            # So Its the file size
+            print("File Size {}".format(kwargs.get(key)))
+        else:
+            for nested_k, nested_v in key.items():
+                print(f"{nested_k}: {nested_v}")
+
+
+def read_and_analyze_log_files():
+    while True:
+        try:
+            status_codes = {
+                "200": 0,
+                "301": 0,
+                "400": 0,
+                "401": 0,
+                "403": 0,
+                "404": 0,
+                "405": 0,
+                "500": 0
+
+            }
+            total_size = 0
+            for time in range(11):
+                log_info = input("").strip()
+                if check_log_format(log_info):
+                    log_info_list = log_info.split(" ")
+                    f_size = log_info_list[-1]
+                    s_code = log_info_list[-2]
+                    status_codes[s_code] = status_codes.get(s_code) + 1
+                    total_size += int(f_size)
+                    sorted_keys_dict = {code: status_codes[code] for code in sorted(status_codes)}
+            print_to_stdout(codes=sorted_keys_dict, size = total_size)
+        except KeyboardInterrupt:
+            print_to_stdout(codes=sorted_keys_dict, size = total_size)
