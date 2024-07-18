@@ -1,54 +1,55 @@
 #!/usr/bin/python3
 
 import sys
+import signal
 
+def print_statistics(total_size, status_counts):
+    print(f"Total file size: {total_size}")
+    for status in sorted(status_counts.keys()):
+        print(f"{status}: {status_counts[status]}")
 
-def print_msg(dict_sc, total_file_size):
-    """
-    Method to print
-    Args:
-        dict_sc: dict of status codes
-        total_file_size: total of the file
-    Returns:
-        Nothing
-    """
+def parse_line(line):
+    parts = line.split()
+    if len(parts) < 9:
+        return None
+    ip_address = parts[0]
+    date = parts[3][1:]
+    method = parts[5][1:]
+    resource = parts[6]
+    protocol = parts[7][:-1]
+    try:
+        status_code = int(parts[8])
+        file_size = int(parts[9])
+    except ValueError:
+        return None
 
-    print("File size: {}".format(total_file_size))
-    for key, val in sorted(dict_sc.items()):
-        if val != 0:
-            print("{}: {}".format(key, val))
+    if method == "GET" and resource.startswith("/projects/") and protocol == "HTTP/1.1":
+        return status_code, file_size
+    return None
 
+total_size = 0
+status_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+line_count = 0
 
-total_file_size = 0
-code = 0
-counter = 0
-dict_sc = {"200": 0,
-           "301": 0,
-           "400": 0,
-           "401": 0,
-           "403": 0,
-           "404": 0,
-           "405": 0,
-           "500": 0}
+def signal_handler(sig, frame):
+    print_statistics(total_size, status_counts)
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 try:
     for line in sys.stdin:
-        parsed_line = line.split()  # ✄ trimming
-        parsed_line = parsed_line[::-1]  # inverting
+        line_count += 1
+        result = parse_line(line.strip())
+        if result:
+            status_code, file_size = result
+            total_size += file_size
+            if status_code in status_counts:
+                status_counts[status_code] += 1
 
-        if len(parsed_line) > 2:
-            counter += 1
+        if line_count % 10 == 0:
+            print_statistics(total_size, status_counts)
 
-            if counter <= 10:
-                total_file_size += int(parsed_line[0])  # file size
-                code = parsed_line[1]  # status code
-
-                if (code in dict_sc.keys()):
-                    dict_sc[code] += 1
-
-            if (counter == 10):
-                print_msg(dict_sc, total_file_size)
-                counter = 0
-
-finally:
-    print_msg(dict_sc, total_file_size)
+except KeyboardInterrupt:
+    print_statistics(total_size, status_counts)
+    sys.exit(0)
