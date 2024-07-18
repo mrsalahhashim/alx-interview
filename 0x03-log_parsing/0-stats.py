@@ -1,18 +1,10 @@
 #!/usr/bin/python3
 
-
-"""
-This module holds a simple module to do log
-parsing. Given a input of log files, extract some
-usefull information and print it to standard output
-"""
-
 import sys
 import re
 def check_log_format(log_string):
     regex_pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[.*\] "GET \/projects\/260 HTTP\/1\.1" \d{3} \d+'
     return re.match(regex_pattern, log_string)
-
 
 def print_to_stdout(**kwargs):
     """
@@ -28,7 +20,6 @@ def print_to_stdout(**kwargs):
             for nested_k, nested_v in key.items():
                 print(f"{nested_k}: {nested_v}")
 
-
 def read_and_analyze_log_files():
     while True:
         try:
@@ -41,7 +32,6 @@ def read_and_analyze_log_files():
                 "404": 0,
                 "405": 0,
                 "500": 0
-
             }
             total_size = 0
             for time in range(11):
