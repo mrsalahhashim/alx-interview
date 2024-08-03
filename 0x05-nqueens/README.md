@@ -1,27 +1,32 @@
-# N queens
+0x05. N Queens
 
-The N queens puzzle is a challenge of placing N non-attacking queens on an NxN chessboard.
+Concepts Needed:
+Backtracking Algorithms:
 
-On a chessboard, the queen can move any number of squares vertically, horizontally
-or diagonally.Thus, to solve the puzzle, each queen must be placed on its own
-row, column and diagonal.
+Understanding how backtracking algorithms work to explore all potential solutions to a problem and backtrack when a solution cannot be completed.
+Backtracking Introduction
+Recursion:
 
-This is most efficiently solved using a backtracking algorithm. Backtracking is
-a general algorithm for finding solutions to some computational problems that
-incrementally builds candidates to the solutions, and abandons a candidate i.e.,
-backtracks as soon as it determines that the candidate cannot possibly be completed
-to a valid solution.
+Using recursive functions to implement backtracking algorithms.
+Recursion in Python
+List Manipulations in Python:
 
-## Usage
+Creating and manipulating lists, especially to store the positions of queens on the board.
+Python Lists
+Python Command Line Arguments:
 
-```nqueens N```
-where N is the number of queens.
-      - N must be an integer greater or equal to 4
-      - the program prints every possible solution to the problem in the format
-        shown below
-```
-$ ./0-nqueens 4
-[[0, 1], [1, 3], [2, 0], [3, 2]]
-[[0, 2], [1, 0], [2, 3], [3, 1]]
-```
-Each inner list represents the coordinates of a queen in the NxN chessboard.
+Handling command-line arguments with the sys module.
+Command Line Arguments in Python
+By studying these concepts and utilizing the resources provided, you will be equipped with the knowledge required to implement an efficient solution to the N queens problem using Python. This project not only tests programming and problem-solving skills but also offers an excellent opportunity to learn about algorithmic thinking and optimization techniques.
+
+Additional Resources
+Mock Interview
+Requirements
+General
+Allowed editors: vi, vim, emacs
+All your files will be interpreted/compiled on Ubuntu 20.04 LTS using python3 (version 3.4.3)
+All your files should end with a new line
+The first line of all your files should be exactly #!/usr/bin/python3
+A README.md file, at the root of the folder of the project, is mandatory
+Your code should use the PEP 8 style (version 1.7.*)
+All your files must be executable
