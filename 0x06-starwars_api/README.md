@@ -1,14 +1,81 @@
-# Star Wars API
+# 0x06. Star Wars API
+ | By Alexa Orrico, Software Engineer at Holberton School |
+ | Weight: 1 |
+ | Ongoing second chance project - started 08-23-2021, must end by 08-30-2021 (in about 1 hour) - you're done with 0% of tasks. |
+ | QA review fully automated. |
 
-This project contains interview coding challenges.
+# In a nutshell…
+* Auto QA review: 0.0/10 mandatory
+* Altogether:  0.0%
+* Mandatory: 0.0%
+* Optional: no optional tasks
+* apis javascript
 
-```bash
-touch 0-starwars_characters.js
-chmod +x 0-starwars_characters.js
+# Requirements
+## General
+* Allowed editors: `vi`, `vim`, `emacs`
+* All your files will be interpreted on Ubuntu 14.04 LTS using node (version 10.14.x)
+* All your files should end with a new line
+* The first line of all your files should be exactly `#!/usr/bin/node`
+* A `README.md` file, at the root of the folder of the project, is mandatory
+* Your code should be `semistandard` compliant. [Rules of Standard](https://standardjs.com/rules.html) + [semicolons on top](https://github.com/standard/semistandard). Also as reference: [AirBnB style](https://github.com/airbnb/javascript)
+* All your files must be executable
+* The length of your files will be tested using wc
+* You are not allowed to use var
 
-# Lint.
-pycodestyle 0-starwars_characters.js
+## More Info
+### Install Node 10
+> $ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+> $ sudo apt-get install -y nodejs
 
-# tests.
-./0-generator.py | ./0-stats.py 
-``
+### Install semi-standard
+[Documentation](https://github.com/standard/semistandard)
+> $ sudo npm install semistandard --global
+
+### Install request module and use it
+[Documentation](https://github.com/request/request)
+
+> $ sudo npm install request --global
+> $ export NODE_PATH=/usr/lib/node_modules
+
+# Tasks
+## 0. Star Wars Characters {.panel-title}
+mandatory
+Score: 0.00% (Checks completed: 0.00%)
+Write a script that prints all characters of a Star Wars movie:
+
+The first positional argument passed is the Movie ID - example: 3 = “Return of the Jedi”
+Display one character name per line in the same order as the “characters” list in the /films/ endpoint
+You must use the Star wars API
+You must use the request module
+
+<!-- -->
+
+    alexa@ubuntu:~/0x06$ ./0-starwars_characters.js 3
+    Luke Skywalker
+    C-3PO
+    R2-D2
+    Darth Vader
+    Leia Organa
+    Obi-Wan Kenobi
+    Chewbacca
+    Han Solo
+    Jabba Desilijic Tiure
+    Wedge Antilles
+    Yoda
+    Palpatine
+    Boba Fett
+    Lando Calrissian
+    Ackbar
+    Mon Mothma
+    Arvel Crynyd
+    Wicket Systri Warrick
+    Nien Nunb
+    Bib Fortuna
+    alexa@ubuntu:~/0x06$ 
+
+**Repo:**
+
+    - GitHub repository: alx-interview
+    - Directory: 0x06-starwars_api
+    - File: 0-starwars_characters.js
